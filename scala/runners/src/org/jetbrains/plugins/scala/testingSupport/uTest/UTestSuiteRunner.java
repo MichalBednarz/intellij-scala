@@ -194,7 +194,7 @@ public final class UTestSuiteRunner  {
       Class<?>[] paramTypes = {
               Tests.class,
               Function2.class,
-              Seq.class,
+              scala.collection.Seq.class,
               Executor.class,
               scala.concurrent.ExecutionContext.class
       };
