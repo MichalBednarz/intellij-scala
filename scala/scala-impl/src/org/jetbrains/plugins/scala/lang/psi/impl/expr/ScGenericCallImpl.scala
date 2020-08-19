@@ -6,7 +6,6 @@ package expr
 
 import com.intellij.lang.ASTNode
 import com.intellij.psi._
-import org.jetbrains.plugins.scala.ScalaBundle
 import org.jetbrains.plugins.scala.lang.psi.api.base.types.ScTypeElement
 import org.jetbrains.plugins.scala.lang.psi.api.expr._
 import org.jetbrains.plugins.scala.lang.psi.impl.ScalaPsiElementFactory.createExpressionFromText
@@ -20,8 +19,6 @@ import org.jetbrains.plugins.scala.lang.resolve.processor._
 import org.jetbrains.plugins.scala.lang.resolve.{ScalaResolveResult, ScalaResolveState}
 import org.jetbrains.plugins.scala.macroAnnotations.{Cached, ModCount}
 import org.jetbrains.plugins.scala.util.KindProjectorUtil.{PolymorphicLambda, kindProjectorPolymorphicLambdaType}
-
-import scala.collection.Seq
 
 
 /**
@@ -41,7 +38,7 @@ class ScGenericCallImpl(node: ASTNode) extends ScExpressionImplBase(node) with S
     val isUpdate = curr.getContext.isInstanceOf[ScAssignment] &&
       curr.getContext.asInstanceOf[ScAssignment].leftExpression == curr
     val methodName = if (isUpdate) "update" else "apply"
-    val args: List[Seq[ScExpression]] =
+    val args: List[collection.Seq[ScExpression]] =
       if (curr == this && !isUpdate) List.empty
       else {
         (curr match {
@@ -57,7 +54,6 @@ class ScGenericCallImpl(node: ASTNode) extends ScExpressionImplBase(node) with S
           else Seq.empty) :: Nil
       }
     val typeArgs: Seq[ScTypeElement] = this.arguments
-    import org.jetbrains.plugins.scala.lang.psi.types.Compatibility.Expression._
     val processor = new MethodResolveProcessor(referencedExpr, methodName, args, typeArgs,
       Seq.empty /* todo: ? */ , isShapeResolve = isShape, enableTupling = true)
     processor.processType(tp, referencedExpr, ScalaResolveState.empty)

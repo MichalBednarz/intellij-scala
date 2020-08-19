@@ -6,14 +6,13 @@ package types
 import com.intellij.psi.PsiClass
 import org.jetbrains.plugins.scala.extensions._
 import org.jetbrains.plugins.scala.lang.psi.api.statements._
+import org.jetbrains.plugins.scala.lang.psi.types.api._
 import org.jetbrains.plugins.scala.lang.psi.types.api.designator.ScDesignatorType
 import org.jetbrains.plugins.scala.project.ProjectContext
 import org.jetbrains.plugins.scala.util.HashBuilder._
 
-import scala.collection.mutable
-
 final case class ScCompoundType private (
-  components:   Seq[ScType],
+  components:   collection.Seq[ScType],
   signatureMap: Map[TermSignature, ScType]      = Map.empty,
   typesMap:     Map[String, TypeAliasSignature] = Map.empty
 )(implicit
@@ -124,7 +123,7 @@ final case class ScCompoundType private (
 
 object ScCompoundType {
   def apply(
-    components:   Seq[ScType],
+    components:   collection.Seq[ScType],
     signatureMap: Map[TermSignature, ScType]      = Map.empty,
     typesMap:     Map[String, TypeAliasSignature] = Map.empty
   )(implicit projectContext: ProjectContext): ScCompoundType = {
@@ -141,7 +140,7 @@ object ScCompoundType {
 
   def fromPsi(components: Seq[ScType], decls: Seq[ScDeclaredElementsHolder], typeDecls: Seq[ScTypeAlias])
              (implicit projectContext: ProjectContext): ScCompoundType = {
-    val signatureMapVal = mutable.HashMap.empty[TermSignature, ScType]
+    val signatureMapVal = collection.mutable.HashMap.empty[TermSignature, ScType]
 
     for (decl <- decls) {
       decl match {

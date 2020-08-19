@@ -88,7 +88,7 @@ class ScUnderscoreSectionImpl(node: ASTNode) extends ScExpressionImplBase(node) 
                     param.fold(failure)(tpe =>
                       if (!isFullyDefined(tpe)) {
                         var i = 0
-                        val ithUnderscore: Seq[ScExpression] => Option[ScExpression] = _.find {
+                        val ithUnderscore: collection.Seq[ScExpression] => Option[ScExpression] = _.find {
                           case _: ScUnderscoreSection =>
                             if (i == idx) true
                             else { i += 1; false }

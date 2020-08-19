@@ -143,7 +143,7 @@ class ScReferenceExpressionImpl(node: ASTNode) extends ScReferenceImpl(node) wit
 
   override def getVariants: Array[Object] = completionVariants(implicits = true).toArray
 
-  override def completionVariants(implicits: Boolean): Seq[ScalaLookupItem] =
+  override def completionVariants(implicits: Boolean): collection.Seq[ScalaLookupItem] =
     getSimpleVariants(incomplete = true, completion = false, implicits).flatMap(toLookupItem)
 
   override def getSameNameVariants: Array[ScalaResolveResult] = this.doResolve(
@@ -272,7 +272,7 @@ class ScReferenceExpressionImpl(node: ASTNode) extends ScReferenceImpl(node) wit
 
   protected def convertBindToType(bind: ScalaResolveResult): TypeResult = {
     val fromType: Option[ScType] = bind.fromType
-    val unresolvedTypeParameters: Seq[TypeParameter] = bind.unresolvedTypeParameters.getOrElse(Seq.empty)
+    val unresolvedTypeParameters = bind.unresolvedTypeParameters.getOrElse(Seq.empty)
 
     val inner: ScType = bind match {
       case ScalaResolveResult(fun: ScFun, s) =>
@@ -530,7 +530,7 @@ class ScReferenceExpressionImpl(node: ASTNode) extends ScReferenceImpl(node) wit
     Right(inner)
   }
 
-  override def getPrevTypeInfoParams: Seq[TypeParameter] = {
+  override def getPrevTypeInfoParams: collection.Seq[TypeParameter] = {
     val maybeExpression = qualifier match {
       case Some(_: ScSuperReference) => None
       case None => getContext match {
@@ -540,9 +540,11 @@ class ScReferenceExpressionImpl(node: ASTNode) extends ScReferenceImpl(node) wit
       case result => result
     }
 
-    maybeExpression.flatMap(_.getNonValueType().toOption).collect {
-      case ScTypePolymorphicType(_, parameters) => parameters
-    }.getOrElse(Seq.empty)
+    maybeExpression
+      .flatMap(_.getNonValueType().toOption)
+      .collect {
+        case ScTypePolymorphicType(_, parameters) => parameters
+      }.getOrElse(Seq.empty)
   }
 
   private def resolveFailure = Failure(ScalaBundle.message("cannot.resolve.expression"))

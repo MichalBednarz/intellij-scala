@@ -28,7 +28,7 @@ import org.jetbrains.plugins.scala.lang.resolve.ScalaResolveState.ResolveStateEx
 import org.jetbrains.plugins.scala.lang.resolve.processor.{BaseProcessor, ResolveProcessor}
 import org.jetbrains.plugins.scala.project.ProjectContext
 
-import scala.collection.{Seq, mutable}
+import scala.collection.mutable
 
 abstract class SyntheticNamedElement(name: String)
                                     (implicit projectContext: ProjectContext)
@@ -100,7 +100,7 @@ sealed class ScSyntheticClass(val className: String, val stdType: StdType)
 
   override def toString = "Synthetic class"
 
-  def syntheticMethods(scope: GlobalSearchScope): List[ScSyntheticFunction] = methods.values.flatMap(s => s).toList ++
+  def syntheticMethods(scope: GlobalSearchScope): List[ScSyntheticFunction] = methods.values.flatten.toList ++
           specialMethods.values.flatMap(s => s.map(_(scope))).toList
 
   protected object methods extends mutable.HashMap[String, mutable.Set[ScSyntheticFunction]] with mutable.MultiMap[String, ScSyntheticFunction]
@@ -147,7 +147,7 @@ sealed class ScSyntheticClass(val className: String, val stdType: StdType)
   }
 }
 
-class ScSyntheticFunction(val name: String, override val retType: ScType, override val paramClauses: Seq[Seq[Parameter]], typeParameterNames: Seq[String])
+class ScSyntheticFunction(val name: String, override val retType: ScType, override val paramClauses: collection.Seq[collection.Seq[Parameter]], typeParameterNames: Seq[String])
                          (implicit projectContext: ProjectContext)
   extends SyntheticNamedElement(name) with ScFun {
   def isStringPlusMethod: Boolean = {

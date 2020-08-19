@@ -3,7 +3,7 @@ package org.jetbrains.plugins.scala.macroAnnotations
 import org.jetbrains.plugins.scala.caches.stats.Tracer
 import org.junit.Assert._
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 
 /**

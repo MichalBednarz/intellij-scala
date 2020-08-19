@@ -64,11 +64,11 @@ trait ScReferenceExpression extends ScExpression
 
   def bindToElement(element: PsiElement, containingClass: Option[PsiClass]): PsiElement
 
-  def getPrevTypeInfoParams: Seq[TypeParameter]
+  def getPrevTypeInfoParams: collection.Seq[TypeParameter]
 
   def getSimpleVariants(incomplete: Boolean = true,
                         completion: Boolean = false,
-                        implicits: Boolean = false): Seq[ScalaResolveResult] =
+                        implicits: Boolean = false): collection.Seq[ScalaResolveResult] =
     doResolve(new CompletionProcessor(getKinds(incomplete, completion), this, withImplicitConversions = implicits))
 }
 

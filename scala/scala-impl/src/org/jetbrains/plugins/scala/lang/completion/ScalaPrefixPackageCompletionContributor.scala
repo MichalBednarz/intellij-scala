@@ -48,7 +48,7 @@ object ScalaPrefixPackageCompletionContributor {
     val project = dummyPosition.getProject
 
     def addPackageForCompletion(packageFqn: String): Unit = {
-      val isExcluded: Boolean = CodeInsightSettings.getInstance.EXCLUDED_PACKAGES.contains(packageFqn.startsWith(_: String))
+      val isExcluded: Boolean = CodeInsightSettings.getInstance.EXCLUDED_PACKAGES.exists(packageFqn.startsWith(_: String))
       if (isExcluded) return
 
       if (parameters.getInvocationCount == 0) return

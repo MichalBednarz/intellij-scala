@@ -34,7 +34,8 @@ import org.jetbrains.plugins.scala.lang.refactoring.util.ScalaNamesUtil
 import org.jetbrains.plugins.scala.macroAnnotations.{CachedInUserData, ModCount}
 
 import scala.annotation.tailrec
-import scala.collection.{JavaConverters, mutable}
+import scala.collection.mutable
+import scala.jdk.CollectionConverters._
 
 class ScalaFileImpl(viewProvider: FileViewProvider,
                     override val getFileType: LanguageFileType = ScalaFileType.INSTANCE)
@@ -117,7 +118,6 @@ class ScalaFileImpl(viewProvider: FileViewProvider,
   override def setPackageName(inName: String): Unit = {
     // TODO support multiple base packages simultaneously
     val basePackageName = {
-      import JavaConverters._
       val basePackages = ScalaProjectSettings.getInstance(getProject).getBasePackages.asScala
       basePackages.find(inName.startsWith).getOrElse("")
     }
@@ -271,7 +271,6 @@ class ScalaFileImpl(viewProvider: FileViewProvider,
   override def controlFlowScope: Option[ScalaPsiElement] = Some(this)
 
   override def getClassNames: ju.Set[String] = {
-    import JavaConverters._
     typeDefinitions.toSet[ScTypeDefinition].flatMap { definition =>
       val classes = definition :: (definition match {
         case _: ScClass => Nil

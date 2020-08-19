@@ -38,7 +38,8 @@ import org.jetbrains.plugins.scala.lang.resolve.{ResolveUtils, ScalaResolveResul
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.{JavaConverters, mutable}
+import scala.collection.mutable
+import scala.jdk.CollectionConverters._
 
 /**
   * User: Alexander Podkhalyuzin
@@ -334,7 +335,7 @@ object ScalaSmartCompletionContributor {
     identifierWithParentsPattern(classOf[ScReferenceExpression], clazz) ||
       identifierWithParentsPattern(classOf[ScReferenceExpression], classOf[ScReferenceExpression], clazz)
 
-  private def acceptTypes(typez: Seq[ScType], variants: Array[Object],
+  private def acceptTypes(typez: Iterable[ScType], variants: Array[Object],
                           result: CompletionResultSet,
                           scope: GlobalSearchScope,
                           secondCompletion: Boolean,
@@ -565,7 +566,6 @@ object ScalaSmartCompletionContributor {
                                 reference: ScReferenceExpression) = {
     val isBraceArgs = args.isBraceArgs
 
-    import JavaConverters._
     reference.expectedTypes().collect {
       case FunctionType(_, types) => types
     }.map {
@@ -576,7 +576,7 @@ object ScalaSmartCompletionContributor {
     }.asJava
   }
 
-  private[this] def createLookupElement(params: Seq[ScType],
+  private[this] def createLookupElement(params: Iterable[ScType],
                                         builder: AnonymousFunctionTextBuilder)
                                        (implicit project: Project) =
     LookupElementBuilder.create("").withRenderer {
@@ -591,7 +591,7 @@ object ScalaSmartCompletionContributor {
 
   import ScalaPsiUtil.functionArrow
 
-  private class AnonymousFunctionElementRenderer(params: Seq[ScType],
+  private class AnonymousFunctionElementRenderer(params: Iterable[ScType],
                                                  builder: AnonymousFunctionTextBuilder)
                                                 (implicit project: Project) extends LookupElementRenderer[LookupElement] {
 
@@ -618,14 +618,14 @@ object ScalaSmartCompletionContributor {
 
       val text =
         if (isEnoughSpaceFor(itemText)) itemText
-        else collapseLastParams(presentableParams.length)
+        else collapseLastParams(presentableParams.size)
 
       presentation.setItemText(text)
       presentation.setIcon(Icons.LAMBDA)
     }
   }
 
-  private class AnonymousFunctionInsertHandler(params: Seq[ScType],
+  private class AnonymousFunctionInsertHandler(params: Iterable[ScType],
                                                builder: AnonymousFunctionTextBuilder) extends InsertHandler[LookupElement] {
 
     override def handleInsert(context: InsertionContext, lookupElement: LookupElement): Unit = {
@@ -728,7 +728,7 @@ object ScalaSmartCompletionContributor {
 
     type Parameter = (ScType, String)
 
-    def apply(types: Seq[Parameter], paramsSuffix: String = "")
+    def apply(types: Iterable[Parameter], paramsSuffix: String = "")
              (implicit project: Project): String =
       createBuffer
         .append(suggestedParameters(types))
@@ -744,7 +744,7 @@ object ScalaSmartCompletionContributor {
       case buffer => buffer
     }
 
-    private def suggestedParameters(types: Seq[Parameter]) = {
+    private def suggestedParameters(types: Iterable[Parameter]) = {
       import Model._
 
       val suggester = new NameSuggester.UniqueNameSuggester("x")

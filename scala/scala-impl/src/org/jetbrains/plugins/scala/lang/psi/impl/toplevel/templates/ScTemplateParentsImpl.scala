@@ -33,15 +33,15 @@ final class ScTemplateParentsImpl private(stub: ScTemplateParentsStub, node: AST
 
   override def toString: String = "TemplateParents"
 
-  override def allTypeElements: Seq[ScTypeElement] = typeElements ++ syntheticTypeElements
+  override def allTypeElements: collection.Seq[ScTypeElement] = typeElements ++ syntheticTypeElements
 
-  override def typeElements: Seq[ScTypeElement] = byPsiOrStub {
-     (constructorInvocation.map(_.typeElement) ++ typeElementsWithoutConstructor).toSeq
+  override def typeElements: collection.Seq[ScTypeElement] = byPsiOrStub {
+    constructorInvocation.map(_.typeElement) ++ typeElementsWithoutConstructor
   } {
     _.parentTypeElements
-  }
+  }.toSeq
 
-  override def superTypes: Seq[ScType] = {
+  override def superTypes: collection.Seq[ScType] = {
     if (!isValid) return Seq.empty
 
     val elements = byStubOrPsi(_.parentTypeElements ++ syntheticTypeElements) {
@@ -58,7 +58,7 @@ final class ScTemplateParentsImpl private(stub: ScTemplateParentsStub, node: AST
   }
 
   @Cached(ModCount.getBlockModificationCount, this)
-  private def syntheticTypeElements: Seq[ScTypeElement] = getContext.getContext match {
+  private def syntheticTypeElements: collection.Seq[ScTypeElement] = getContext.getContext match {
     case td: ScTypeDefinition => SyntheticMembersInjector.injectSupers(td)
     case _ => Seq.empty
   }

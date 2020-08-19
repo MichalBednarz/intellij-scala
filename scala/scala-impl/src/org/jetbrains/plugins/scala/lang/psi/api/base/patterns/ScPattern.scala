@@ -40,11 +40,11 @@ import scala.meta.intellij.QuasiquoteInferUtil
 trait ScPattern extends ScalaPsiElement with Typeable {
   def isIrrefutableFor(t: Option[ScType]): Boolean
 
-  def bindings: Seq[ScBindingPattern]
+  def bindings: collection.Seq[ScBindingPattern]
 
-  def typeVariables: Seq[ScTypeVariableTypeElement]
+  def typeVariables: collection.Seq[ScTypeVariableTypeElement]
 
-  def subpatterns: Seq[ScPattern]
+  def subpatterns: collection.Seq[ScPattern]
 
   def analogInDesugaredForExpr: Option[ScPattern]
 
@@ -333,7 +333,7 @@ object ScPattern {
     }.headOption
   }
 
-  def extractPossibleProductParts(receiverType: ScType, place: PsiElement): Seq[ScType] = {
+  def extractPossibleProductParts(receiverType: ScType, place: PsiElement): collection.Seq[ScType] = {
     val result = mutable.ArrayBuffer.empty[ScType]
 
     @tailrec
@@ -356,7 +356,7 @@ object ScPattern {
   private[this] case class ByNameExtractor(place: PsiElement) {
     def unapply(tpe: ScType): Option[Seq[ScType]] = {
       val selectors = extractPossibleProductParts(tpe, place)
-      if (selectors.length >= 2) Option(selectors)
+      if (selectors.length >= 2) Option(selectors.toSeq)
       else                       None
     }
   }
@@ -425,7 +425,7 @@ object ScPattern {
         case clazz => clazz.constructor.exists(_.effectiveFirstParameterSection.length == 1)
       })
 
-  private[this] def productElementTypes(returnTpe: ScType, place: PsiElement, fun: ScFunction): Seq[ScType] =
+  private[this] def productElementTypes(returnTpe: ScType, place: PsiElement, fun: ScFunction): collection.Seq[ScType] =
     if (returnTpe.isBoolean) Seq.empty
     else {
       lazy val byNameExtractor = ByNameExtractor(place)
@@ -439,14 +439,14 @@ object ScPattern {
       }.getOrElse(Seq.empty)
     }
 
-  def unapplySubpatternTypes(returnTpe: ScType, place: PsiElement, fun: ScFunction): Seq[ScType] = {
+  def unapplySubpatternTypes(returnTpe: ScType, place: PsiElement, fun: ScFunction): collection.Seq[ScType] = {
     val isUnapplySeq = fun.name == CommonNames.UnapplySeq
     val tpes         = productElementTypes(returnTpe, place, fun)
 
     if (tpes.isEmpty)       Seq.empty
     else if (!isUnapplySeq) tpes
     else
-      extractSeqElementType(tpes.last, place).fold(Seq.empty[ScType])(tpes.init :+ _)
+      extractSeqElementType(tpes.last, place).fold(collection.Seq.empty[ScType])(tpes.init :+ _)
   }
 
   def isQuasiquote(fun: ScFunction): Boolean = {

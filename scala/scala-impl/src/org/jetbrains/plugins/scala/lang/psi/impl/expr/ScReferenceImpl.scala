@@ -30,7 +30,7 @@ abstract class ScReferenceImpl(node: ASTNode) extends ScalaPsiElementImpl(node) 
 
   override def getVariants: Array[Object] = completionVariants().toArray
 
-  override def completionVariants(implicits: Boolean): Seq[ScalaLookupItem] = {
+  override def completionVariants(implicits: Boolean): collection.Seq[ScalaLookupItem] = {
     val processor = new CompletionProcessor(getKinds(incomplete = true, completion = false), this)
     doResolve(processor).flatMap(toLookupItem)
   }

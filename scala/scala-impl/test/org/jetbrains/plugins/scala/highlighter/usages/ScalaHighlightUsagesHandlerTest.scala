@@ -4,7 +4,7 @@ import com.intellij.codeInsight.highlighting.{HighlightUsagesHandler, HighlightU
 import com.intellij.psi.PsiElement
 import org.jetbrains.plugins.scala.base.ScalaLightCodeInsightFixtureTestAdapter
 import org.junit.Assert
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 
 /**
@@ -209,7 +209,7 @@ class ScalaHighlightUsagesHandlerTest extends ScalaLightCodeInsightFixtureTestAd
     val targets = handler.getTargets
     Assert.assertEquals(1, targets.size())
     handler.computeUsages(targets)
-    val actualUsages: Seq[String] = handler.getReadUsages.asScala.map(_.substring(getFile.getText))
+    val actualUsages: Seq[String] = handler.getReadUsages.asScala.map(_.substring(getFile.getText)).toSeq
     Assert.assertEquals(s"actual: $actualUsages, expected: $expected", expected, actualUsages)
   }
 

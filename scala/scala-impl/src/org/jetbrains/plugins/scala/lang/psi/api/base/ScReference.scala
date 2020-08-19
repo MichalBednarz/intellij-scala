@@ -193,7 +193,7 @@ trait ScReference extends ScalaPsiElement with PsiPolyVariantReference {
   //provides the set of possible namespace alternatives based on syntactic position
   def getKinds(incomplete: Boolean, completion: Boolean = false): Set[ResolveTargets.Value]
 
-  def completionVariants(implicits: Boolean = false): Seq[ScalaLookupItem]
+  def completionVariants(implicits: Boolean = false): collection.Seq[ScalaLookupItem]
 
   def getSameNameVariants: Array[ScalaResolveResult]
 

@@ -11,4 +11,4 @@ trait WorksheetInProcessRunner {
   def loadAndRun(args: WorksheetArgsPlain, context: WorksheetRunnerContext, client: Client): Unit
 }
 
-case class WorksheetRunnerContext(compilerJars: CompilerJars, classpath: Seq[File])
+case class WorksheetRunnerContext(compilerJars: CompilerJars, classpath: collection.Seq[File])

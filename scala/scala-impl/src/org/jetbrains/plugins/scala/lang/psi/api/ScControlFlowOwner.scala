@@ -12,7 +12,7 @@ import org.jetbrains.plugins.scala.macroAnnotations.{Cached, ModCount}
 trait ScControlFlowOwner extends ScalaPsiElement {
 
   @Cached(ModCount.getModificationCount, this)
-  def getControlFlow: Seq[Instruction] = {
+  def getControlFlow: collection.Seq[Instruction] = {
     val builder = new ScalaControlFlowBuilder(null, null)
     controlFlowScope match {
       case Some(elem) => builder.buildControlflow(elem)

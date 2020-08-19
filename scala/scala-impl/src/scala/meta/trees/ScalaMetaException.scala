@@ -2,8 +2,6 @@ package scala.meta.trees
 
 import com.intellij.psi.PsiElement
 
-import scala.meta.internal.{ast => m, semantic => h}
-
 class AbortException(reason: String) extends RuntimeException(reason) {
   def this(place: Any, mess: String) = this(mess + s"[$place]")
 }

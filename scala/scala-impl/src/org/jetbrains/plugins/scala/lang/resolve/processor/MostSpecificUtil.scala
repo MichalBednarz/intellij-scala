@@ -34,7 +34,6 @@ case class MostSpecificUtil(elem: PsiElement, length: Int) {
   implicit def ctx: ProjectContext = elem
 
   def mostSpecificForResolveResult(applicable: Set[ScalaResolveResult],
-                                   hasTypeParametersCall: Boolean = false,
                                    expandInnerResult: Boolean = true): Option[ScalaResolveResult] = {
     mostSpecificGeneric(applicable.map(r => r.innerResolveResult match {
       case Some(rr) if expandInnerResult =>
@@ -54,7 +53,7 @@ case class MostSpecificUtil(elem: PsiElement, length: Int) {
   }
 
   def nextLayerSpecificForImplicitParameters(filterRest: Option[ScalaResolveResult],
-                                             rest: Seq[ScalaResolveResult]): (Option[ScalaResolveResult], Seq[ScalaResolveResult]) = {
+                                             rest: collection.Seq[ScalaResolveResult]): (Option[ScalaResolveResult], collection.Seq[ScalaResolveResult]) = {
     val (next, r) = nextLayerSpecificGeneric(filterRest.map(toInnerSRR), rest.map(toInnerSRR))
     (next.map(_.repr), r.map(_.repr))
   }
@@ -91,13 +90,13 @@ case class MostSpecificUtil(elem: PsiElement, length: Int) {
   private def isAsSpecificAs[T](r1: InnerScalaResolveResult[T], r2: InnerScalaResolveResult[T],
                                 checkImplicits: Boolean): Boolean = {
 
-    def lastRepeated(params: Seq[Parameter]): Boolean = params.lastOption.exists(_.isRepeated)
+    def lastRepeated(params: Iterable[Parameter]): Boolean = params.lastOption.exists(_.isRepeated)
 
     (r1.element, r2.element) match {
       case (m1 @ (_: PsiMethod | _: ScFun), m2 @ (_: PsiMethod | _: ScFun)) =>
         val (t1, t2) = (r1.substitutor(getType(m1, r1.implicitCase)), r2.substitutor(getType(m2, r2.implicitCase)))
 
-        def calcParams(tp: ScType, undefine: Boolean): Either[Seq[Parameter], ScType] = {
+        def calcParams(tp: ScType, undefine: Boolean): Either[collection.Seq[Parameter], ScType] = {
           def toExistentialArg(tp: TypeParameter) =
             ScExistentialArgument(tp.name, tp.typeParameters, tp.lowerType, tp.upperType)
 
@@ -145,7 +144,7 @@ case class MostSpecificUtil(elem: PsiElement, length: Int) {
               val i: Int = if (params1.nonEmpty) 0.max(length - params1.length) else 0
               val default: Expression =
                 Expression(if (params1.nonEmpty) params1.last.paramType else Nothing, elem)
-              val exprs: Seq[Expression] = params1.map(p => Expression(p.paramType, elem)) ++
+              val exprs: collection.Seq[Expression] = params1.map(p => Expression(p.paramType, elem)) ++
                       Seq.fill(i)(default)
               Compatibility.checkConformance(checkNames = false, params2, exprs, checkImplicits)
             case (Right(type1), Right(type2)) =>
@@ -274,7 +273,7 @@ case class MostSpecificUtil(elem: PsiElement, length: Int) {
   }
 
   private def nextLayerSpecificGeneric[T](filterRest: Option[InnerScalaResolveResult[T]],
-                                          rest: Seq[InnerScalaResolveResult[T]]): (Option[InnerScalaResolveResult[T]], Seq[InnerScalaResolveResult[T]]) = {
+                                          rest: collection.Seq[InnerScalaResolveResult[T]]): (Option[InnerScalaResolveResult[T]], collection.Seq[InnerScalaResolveResult[T]]) = {
 
     val filteredRest = filterRest match {
       case Some(r) => rest.filter(!isMoreSpecific(r, _, checkImplicits = false))

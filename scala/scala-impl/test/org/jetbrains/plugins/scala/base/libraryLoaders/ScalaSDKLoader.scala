@@ -83,7 +83,7 @@ case class ScalaSDKLoader(includeScalaReflect: Boolean = false) extends LibraryL
     }
 
     val classesRoots = {
-      import scala.collection.JavaConverters._
+      import scala.jdk.CollectionConverters._
       compilerClasspath.map(findJarFile).asJava
     }
 

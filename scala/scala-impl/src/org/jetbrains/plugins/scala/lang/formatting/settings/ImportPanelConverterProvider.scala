@@ -11,7 +11,7 @@ import com.intellij.openapi.util.JDOMUtil
 import com.intellij.util.SystemProperties
 import org.jdom.Document
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 /**
  * @author Alefas
@@ -35,7 +35,7 @@ class ImportPanelConverterProvider extends ConverterProvider("ImportPanelConvert
         "sortImports"
       )
 
-    def getElements: Seq[Element] = {
+    def getElements: collection.Seq[Element] = {
       context.getSettingsBaseDir.listFiles().find(_.getName == "scala_settings.xml") match {
         case Some(file) =>
           import com.intellij.conversion.impl.ConversionContextImpl

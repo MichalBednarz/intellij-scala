@@ -89,7 +89,7 @@ class PsiClassWrapper(val definition: ScTemplateDefinition,
       case t: ScTrait =>
         val res = new ArrayBuffer[PsiMethod]()
 
-        def addGettersAndSetters(holder: ScAnnotationsHolder, declaredElements: Seq[ScTypedDefinition]): Unit = {
+        def addGettersAndSetters(holder: ScAnnotationsHolder, declaredElements: Iterable[ScTypedDefinition]): Unit = {
           val beanProperty = isBeanProperty(holder)
           val booleanBeanProperty = isBooleanBeanProperty(holder)
           if (beanProperty || booleanBeanProperty) {
