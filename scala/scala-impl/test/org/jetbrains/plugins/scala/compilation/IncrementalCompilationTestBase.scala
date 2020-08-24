@@ -71,9 +71,9 @@ abstract class IncrementalCompilationTestBase(override protected val incremental
     compiler.make().assertNoProblems()
     val Seq(firstTsAfter, secondTsAfter, thirdTsAfter) = sources.map(_.targetTimestamps)
 
-    assertThat("First recompiled", firstTsAfter, everyValueGreaterThanIn(firstTsBefore))
-    assertThat("Second recompiled", secondTsAfter, everyValueGreaterThanIn(secondTsBefore))
-    assertThat("Third not recompiled", thirdTsAfter, equalTo(thirdTsBefore))
+    assertThat("First hasn't been recompiled", firstTsAfter, everyValueGreaterThanIn(firstTsBefore))
+    assertThat("Second hasn't been recompiled", secondTsAfter, everyValueGreaterThanIn(secondTsBefore))
+    assertThat("Third has been recompiled", thirdTsAfter, equalTo(thirdTsBefore))
   }
 
   def testDeleteOldTargetFiles(): Unit = {
@@ -170,7 +170,7 @@ abstract class IncrementalCompilationTestBase(override protected val incremental
     targetDir.listFiles().map(_.getName).toSet
 
   protected def classFileNames(className: String)
-                            (implicit version: ScalaVersion): Set[String] = {
+                              (implicit version: ScalaVersion): Set[String] = {
     val suffixes = version.languageLevel match {
       case ScalaLanguageLevel.Scala_3_0 => Set("class", "tasty")
       case _                            => Set("class")
@@ -183,7 +183,8 @@ abstract class IncrementalCompilationTestBase(override protected val incremental
 
     private var classes: Set[String] = Set.empty
 
-    def this(name: String, classes: Set[String], code: String) = {
+    def this(name: String, classes: Set[String], code: String)
+            (implicit version: ScalaVersion) = {
       this(name)
       writeCode(classes, code)
     }
