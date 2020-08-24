@@ -1472,7 +1472,7 @@ private object ScalaConformance {
               () => remapExistentials(ex.upper)
             )
           )
-      )(collection.breakOut)
+      ).to(Map)
 
     def remapExistentials(tpe: ScType): ScType =
       tpe.recursiveUpdate {

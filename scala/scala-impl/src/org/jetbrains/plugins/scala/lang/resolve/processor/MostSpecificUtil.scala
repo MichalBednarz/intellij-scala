@@ -90,7 +90,7 @@ case class MostSpecificUtil(elem: PsiElement, length: Int) {
     val implicitCase:            Boolean = false
   )
 
-  private class ExistentialAbstractionBuilder(tparams: Seq[TypeParameter]) {
+  private class ExistentialAbstractionBuilder(tparams: collection.Seq[TypeParameter]) {
     private lazy val existentialArgumentSubst: ScSubstitutor = {
       ScSubstitutor.bind(tparams)(
         tp =>

@@ -82,7 +82,7 @@ abstract class ScFunctionImpl[F <: ScFunction](stub: ScFunctionStub[F],
   override def paramClauses: ScParameters = getStubOrPsiChild(ScalaElementType.PARAM_CLAUSES)
 
   @CachedInUserData(this, BlockModificationTracker(this))
-  override def syntheticContextAppliedDefs: Seq[ScalaPsiElement] =
+  override def syntheticContextAppliedDefs: collection.Seq[ScalaPsiElement] =
     ContextAppliedUtil.createSyntheticElementsFor(this, this.containingClass, parameters, typeParameters)
 
   override def processDeclarations(

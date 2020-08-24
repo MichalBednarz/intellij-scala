@@ -17,6 +17,7 @@ import org.jetbrains.plugins.scala.lang.psi.{impl, api => p, types => ptype}
 
 import scala.annotation.tailrec
 import scala.language.postfixOps
+import scala.meta.ScalaMetaBundle
 import scala.meta.trees.error._
 import scala.{meta => m, Seq => _}
 
