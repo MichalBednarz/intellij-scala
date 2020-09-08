@@ -1,6 +1,7 @@
 package org.jetbrains.plugins.scala
 package testingSupport.test.specs2
 
+import com.intellij.execution.actions.RunConfigurationProducer
 import com.intellij.execution.configurations.ConfigurationFactory
 import com.intellij.psi.util.PsiTreeUtil
 import org.jetbrains.plugins.scala.extensions.{PsiElementExt, TraversableExt}
@@ -9,7 +10,9 @@ import org.jetbrains.plugins.scala.lang.psi.api.expr.{ScExpression, ScInfixExpr}
 import org.jetbrains.plugins.scala.lang.psi.api.toplevel.typedef.ScTypeDefinition
 import org.jetbrains.plugins.scala.testingSupport.test.AbstractTestConfigurationProducer.CreateFromContextInfo
 import org.jetbrains.plugins.scala.testingSupport.test.AbstractTestConfigurationProducer.CreateFromContextInfo.{AllInPackage, ClassWithTestName}
+import org.jetbrains.plugins.scala.testingSupport.test.scalatest.ScalaTestConfigurationProducer
 import org.jetbrains.plugins.scala.testingSupport.test.structureView.TestNodeProvider
+import org.jetbrains.plugins.scala.testingSupport.test.utest.UTestConfigurationProducer
 import org.jetbrains.plugins.scala.testingSupport.test.{AbstractTestConfigurationProducer, TestConfigurationUtil}
 
 final class Specs2ConfigurationProducer extends AbstractTestConfigurationProducer[Specs2RunConfiguration] {
@@ -68,4 +71,10 @@ final class Specs2ConfigurationProducer extends AbstractTestConfigurationProduce
     }
     Some(ClassWithTestName(testClassDef, testName))
   }
+}
+
+object Specs2ConfigurationProducer {
+
+  def instance: Specs2ConfigurationProducer =
+    RunConfigurationProducer.EP_NAME.findExtensionOrFail(classOf[Specs2ConfigurationProducer])
 }

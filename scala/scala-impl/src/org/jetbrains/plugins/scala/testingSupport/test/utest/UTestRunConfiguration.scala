@@ -8,7 +8,7 @@ import com.intellij.testIntegration.TestFramework
 import org.jetbrains.plugins.scala.lang.psi.api.toplevel.typedef.ScObject
 import org.jetbrains.plugins.scala.testingSupport.test.AbstractTestRunConfiguration.TestFrameworkRunnerInfo
 import org.jetbrains.plugins.scala.testingSupport.test.sbt.{SbtCommandsBuilder, SbtCommandsBuilderBase, SbtTestRunningSupport, SbtTestRunningSupportBase}
-import org.jetbrains.plugins.scala.testingSupport.test.{AbstractTestRunConfiguration, SuiteValidityChecker, SuiteValidityCheckerBase, TestConfigurationUtil}
+import org.jetbrains.plugins.scala.testingSupport.test.{AbstractTestRunConfiguration, SuiteValidityChecker, SuiteValidityCheckerBase}
 
 class UTestRunConfiguration(
   project: Project,
@@ -24,7 +24,7 @@ class UTestRunConfiguration(
 
   override val testFramework: TestFramework = TestFramework.EXTENSION_NAME.findExtension(classOf[UTestTestFramework])
 
-  override val configurationProducer: UTestConfigurationProducer = TestConfigurationUtil.uTestConfigurationProducer
+  override val configurationProducer: UTestConfigurationProducer = UTestConfigurationProducer.instance
 
   override protected val validityChecker: SuiteValidityChecker = new SuiteValidityCheckerBase {
     override protected def isValidClass(clazz: PsiClass): Boolean = clazz.isInstanceOf[ScObject]
