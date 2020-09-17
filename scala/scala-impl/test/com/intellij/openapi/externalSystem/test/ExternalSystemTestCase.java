@@ -83,8 +83,6 @@ public abstract class ExternalSystemTestCase extends UsefulTestCase {
     protected VirtualFile myProjectConfig;
     protected List<VirtualFile> myAllConfigs = new ArrayList<VirtualFile>();
 
-    private List<String> myAllowedRoots = new ArrayList<String>();
-
     @Before
     @Override
     public void setUp() throws Exception {
@@ -117,35 +115,13 @@ public abstract class ExternalSystemTestCase extends UsefulTestCase {
         CompilerTestUtil.enableExternalCompiler();
     }
 
-    private void trySetupInWriteAction() {
-        try {
-            setUpInWriteAction();
-        } catch (Throwable e) {
-            try {
-                tearDown();
-            } catch (Exception e1) {
-                e1.printStackTrace();
-            }
-            throw new RuntimeException(e);
-        }
-    }
-
     protected void collectAllowedRoots(List<String> roots) throws IOException {
     }
 
     @SuppressWarnings("deprecation")
     public void registerAllowedRoots(List<String> roots, @NotNull Disposable disposable) {
-        final List<String> newRoots = new ArrayList<String>(roots);
-        newRoots.removeAll(myAllowedRoots);
-
-        final String[] newRootsArray = ArrayUtil.toStringArray(newRoots);
-        VfsRootAccess.allowRootAccess(newRootsArray);
-        myAllowedRoots.addAll(newRoots);
-
-        Disposer.register(disposable, () -> {
-            VfsRootAccess.disallowRootAccess(newRootsArray);
-            myAllowedRoots.removeAll(newRoots);
-        });
+        final String[] newRootsArray = ArrayUtil.toStringArray(roots);
+        VfsRootAccess.allowRootAccess(disposable, newRootsArray);
     }
 
     private void ensureTempDirCreated() throws IOException {
